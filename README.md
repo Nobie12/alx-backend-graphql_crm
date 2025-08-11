@@ -98,6 +98,6 @@ After working through this repo, you should confidently:
 
 ## References
 
-- **Video Tutorial:** [How to Embed YouTube Videos in GitHub Readme Markdown](https://youtu.be/-ouECXRNX1I?si=uC6ShdG9jVwAUNKZ) – A concise guide on embedding YouTube videos in GitHub README files.
+- **Video Tutorial:** [graphgl with django](https://youtu.be/-ouECXRNX1I?si=uC6ShdG9jVwAUNKZ) – A concise tutorial on using GraphQL with Django.
 
 - **Graphene-Django Documentation:** [https://docs.graphene-python.org/projects/django/en/latest/](https://docs.graphene-python.org/projects/django/en/latest/) – Official documentation for integrating GraphQL with Django using graphene-django.
