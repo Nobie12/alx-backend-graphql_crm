@@ -43,6 +43,9 @@ INSTALLED_APPS = [
 
     # GraphQL integration
     'graphene_django',
+
+    # For filtering queries
+    'django_filters'
 ]
 
 MIDDLEWARE = [

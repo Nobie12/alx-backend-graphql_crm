@@ -1,6 +1,8 @@
 import graphene
 from graphene_django import DjangoObjectType
 from .models import Customer, Product, Order
+from .filters import CustomerFilter, ProductFilter, OrderFilter
+from graphene_django.filter import DjangoFilterConnectionField
 from graphql import GraphQLError
 from decimal import Decimal
 from django.utils import timezone
@@ -12,16 +14,19 @@ class CustomerType(DjangoObjectType):
     class Meta:
         model = Customer
         fields = ('id', 'name', 'email', 'phone')
+        interfaces = (graphene.relay.Node,)
 
 class ProductType(DjangoObjectType):
     class Meta:
         model = Product
         fields = ('id', 'name', 'price', 'stock')
+        interfaces = (graphene.relay.Node,)
 
 class OrderType(DjangoObjectType):
     class Meta:
         model = Order
-        fields = ('id', 'customer', 'products', 'order_date')
+        fields = ('id', 'customer', 'products', 'order_date', 'total_amount')
+        interfaces = (graphene.relay.Node,)
 
 
 class CreateCustomer(graphene.Mutation):
@@ -159,17 +164,40 @@ class Mutation(graphene.ObjectType):
 
 
 class Query(graphene.ObjectType):
-    customers = graphene.List(CustomerType)
-    products = graphene.List(ProductType)
-    orders = graphene.List(OrderType)
+    # Add order_by argument for sorting
+    all_customers = DjangoFilterConnectionField(
+        CustomerType,
+        filterset_class=CustomerFilter,
+        order_by=graphene.List(of_type=graphene.String)
+    )
+    all_products = DjangoFilterConnectionField(
+        ProductType,
+        filterset_class=ProductFilter,
+        order_by=graphene.List(of_type=graphene.String)
+    )
+    all_orders = DjangoFilterConnectionField(
+        OrderType,
+        filterset_class=OrderFilter,
+        order_by=graphene.List(of_type=graphene.String)
+    )
 
-    def resolve_customers(root, info):
-        return Customer.objects.all()
+    # Override resolver to support order_by sorting
+    def resolve_all_customers(self, info, order_by=None, **kwargs):
+        qs = Customer.objects.all()
+        if order_by:
+            qs = qs.order_by(*order_by)
+        return qs
 
-    def resolve_products(root, info):
-        return Product.objects.all()
+    def resolve_all_products(self, info, order_by=None, **kwargs):
+        qs = Product.objects.all()
+        if order_by:
+            qs = qs.order_by(*order_by)
+        return qs
 
-    def resolve_orders(root, info):
-        return Order.objects.all()
+    def resolve_all_orders(self, info, order_by=None, **kwargs):
+        qs = Order.objects.all()
+        if order_by:
+            qs = qs.order_by(*order_by)
+        return qs
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
