@@ -154,7 +154,24 @@ class CreateOrder(graphene.Mutation):
         order.products.set(products)
         return CreateOrder(order=order)
 
+class UpdateLowStockProducts(graphene.Mutation):
+    class Arguments:
+        stock_threshold = graphene.Int(default_value=10)
 
+    products = graphene.List(ProductType)
+    message = graphene.String()
+
+    def mutate(self, info, stock_threshold=10):
+        restock_quantity = 10
+
+        # products with stock < 10
+        products = Product.objects.filter(stock__lt=stock_threshold)
+
+        # increment each product by 10 simulating restocking
+        for product in products:
+            product.stock += restock_quantity
+            product.save()
+        return UpdateLowStockProducts(products=products, messages="Restock completed successfully")
 
 class Mutation(graphene.ObjectType):
     create_customer = CreateCustomer.Field()
