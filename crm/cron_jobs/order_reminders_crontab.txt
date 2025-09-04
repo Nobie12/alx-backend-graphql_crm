@@ -1,0 +1,1 @@
+0 8 * * * projects/alx/alx-prodev-backend/alx-backend-graphql_crm/.venv/bin/python projects/alx/alx-prodev-backend/alx-backend-graphql_crm/manage.py shell < projects/alx/alx-prodev-backend/alx-backend-graphql_crm/crm/cron_jobs/send_order_reminders.py
