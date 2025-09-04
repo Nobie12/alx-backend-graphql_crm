@@ -37,16 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Our app
     'crm',
-
-    # GraphQL integration
     'graphene_django',
-
-    # For filtering queries
     'django_filters'
-
     'django_crontab',
     'django_celery_beat',
 ]
